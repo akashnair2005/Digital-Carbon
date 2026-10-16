@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DigitalCarbon – Estimate the Carbon Footprint of Your Digital Life</title>
+  <meta name="description" content="DigitalCarbon estimates the approximate carbon footprint of streaming, gaming, AI, cloud storage, video calls and device usage." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js via CDN (needs internet the first time the page is opened) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+<!-- ============ NAVIGATION ============ -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="#home" class="brand"><span class="brand-mark">🌱</span> DigitalCarbon</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    <nav id="navLinks" class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#calculator">Calculator</a>
+      <a href="#results" data-needs-results>Dashboard</a>
+      <a href="#whatif" data-needs-results>What-If</a>
+      <a href="#recommendations" data-needs-results>Recommendations</a>
+      <a href="#methodology">Methodology</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ 1. HOME ============ -->
+<section id="home" class="hero">
+  <div class="container hero-inner">
+    <span class="pill">🌍 EVS Project · Educational estimator</span>
+    <h1>Digital<span class="accent">Carbon</span></h1>
+    <p class="subtitle">Understand the carbon footprint of your digital life.</p>
+    <p class="lead">Streaming, gaming, cloud storage, AI and everyday device usage require energy. DigitalCarbon provides an approximate estimate of the associated carbon footprint and helps you explore ways to reduce it.</p>
+    <div class="hero-actions">
+      <a href="#calculator" class="btn btn-primary btn-lg" id="ctaStart">Calculate My Digital Footprint</a>
+      <a href="#methodology" class="btn btn-ghost btn-lg">How it works</a>
+    </div>
+
+    <div class="chips" aria-label="Activities covered">
+      <div class="chip"><span>🎬</span>STREAMING</div>
+      <div class="chip"><span>🎮</span>GAMING</div>
+      <div class="chip"><span>🤖</span>AI</div>
+      <div class="chip"><span>☁️</span>CLOUD</div>
+      <div class="chip"><span>📞</span>VIDEO CALLS</div>
+      <div class="chip"><span>💻</span>DEVICES</div>
+    </div>
+
+    <div class="flow-strip">
+      <div><b>1</b> Enter habits</div><i>→</i>
+      <div><b>2</b> See footprint</div><i>→</i>
+      <div><b>3</b> Find hotspot</div><i>→</i>
+      <div><b>4</b> Try What-If</div><i>→</i>
+      <div><b>5</b> Get tips</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. CALCULATOR ============ -->
+<section id="calculator" class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Step 1</span>
+      <h2>Carbon Calculator</h2>
+      <p>Tell us about a typical day or week of your digital life. Enter <strong>0</strong> for anything you don't use.</p>
+    </div>
+
+    <form id="calcForm" novalidate autocomplete="off">
+      <div class="form-grid">
+
+        <!-- A. STREAMING -->
+        <fieldset class="card">
+          <legend><span class="ico">🎬</span> A. Video Streaming</legend>
+          <div class="field">
+            <label for="streamHours">Hours of streaming per day</label>
+            <input type="number" id="streamHours" min="0" max="24" step="0.1" placeholder="e.g. 3" inputmode="decimal" />
+            <div class="error" data-for="streamHours"></div>
+          </div>
+          <div class="field">
+            <label for="streamQuality">Typical video quality</label>
+            <select id="streamQuality">
+              <option value="sd">SD (480p)</option>
+              <option value="hd" selected>HD (720p)</option>
+              <option value="fhd">Full HD (1080p)</option>
+              <option value="uhd">4K</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- B. GAMING -->
+        <fieldset class="card">
+          <legend><span class="ico">🎮</span> B. Gaming</legend>
+          <div class="field">
+            <label for="gameHours">Gaming hours per week</label>
+            <input type="number" id="gameHours" min="0" max="168" step="0.5" placeholder="e.g. 10" inputmode="decimal" />
+            <div class="error" data-for="gameHours"></div>
+          </div>
+          <div class="field">
+            <label for="gameDevice">Device</label>
+            <select id="gameDevice">
+              <option value="phone">Smartphone</option>
+              <option value="laptop" selected>Laptop</option>
+              <option value="desktop">Desktop PC</option>
+              <option value="console">Gaming console</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- C. AI -->
+        <fieldset class="card">
+          <legend><span class="ico">🤖</span> C. AI Usage</legend>
+          <div class="field">
+            <label for="aiPrompts">AI interactions / prompts per day</label>
+            <input type="number" id="aiPrompts" min="0" max="5000" step="1" placeholder="e.g. 20" inputmode="numeric" />
+            <div class="error" data-for="aiPrompts"></div>
+          </div>
+          <div class="field">
+            <label for="aiIntensity">Usage intensity <span class="opt">(optional)</span></label>
+            <select id="aiIntensity">
+              <option value="light">Light – short text questions</option>
+              <option value="standard" selected>Standard – normal chat &amp; writing</option>
+              <option value="heavy">Heavy – long documents, images, reasoning</option>
+            </select>
+          </div>
+          <p class="note">AI estimates are approximate and depend on model size, infrastructure, data-centre efficiency and electricity source.</p>
+        </fieldset>
+
+        <!-- D. CLOUD -->
+        <fieldset class="card">
+          <legend><span class="ico">☁️</span> D. Cloud Storage</legend>
+          <div class="field">
+            <label for="cloudGB">Approximate cloud storage used (GB)</label>
+            <input type="number" id="cloudGB" min="0" max="100000" step="1" placeholder="e.g. 150" inputmode="decimal" />
+            <div class="error" data-for="cloudGB"></div>
+          </div>
+          <div class="field">
+            <label for="cloudMonths">Months stored per year <span class="opt">(optional, default 12)</span></label>
+            <input type="number" id="cloudMonths" min="1" max="12" step="1" placeholder="12" inputmode="numeric" />
+            <div class="error" data-for="cloudMonths"></div>
+          </div>
+        </fieldset>
+
+        <!-- E. VIDEO CONFERENCING -->
+        <fieldset class="card">
+          <legend><span class="ico">📞</span> E. Video Conferencing</legend>
+          <div class="field">
+            <label for="vcHours">Hours per week</label>
+            <input type="number" id="vcHours" min="0" max="100" step="0.5" placeholder="e.g. 5" inputmode="decimal" />
+            <div class="error" data-for="vcHours"></div>
+          </div>
+          <div class="field">
+            <label for="vcPeople">Typical number of participants</label>
+            <input type="number" id="vcPeople" min="1" max="500" step="1" placeholder="e.g. 4" inputmode="numeric" />
+            <div class="error" data-for="vcPeople"></div>
+          </div>
+          <div class="field">
+            <label for="vcCamera">Camera</label>
+            <select id="vcCamera">
+              <option value="on" selected>Usually on (video)</option>
+              <option value="off">Usually off (audio-only)</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <!-- F. DEVICES -->
+        <fieldset class="card">
+          <legend><span class="ico">💻</span> F. Device Usage</legend>
+          <div class="field">
+            <label for="pcHours">Laptop / PC hours per day</label>
+            <input type="number" id="pcHours" min="0" max="24" step="0.5" placeholder="e.g. 6" inputmode="decimal" />
+            <div class="error" data-for="pcHours"></div>
+          </div>
+          <div class="field">
+            <label for="pcType">Device type</label>
+            <select id="pcType">
+              <option value="laptop" selected>Laptop</option>
+              <option value="desktop">Desktop PC (with monitor)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="phoneHours">Smartphone hours per day</label>
+            <input type="number" id="phoneHours" min="0" max="24" step="0.5" placeholder="e.g. 4" inputmode="decimal" />
+            <div class="error" data-for="phoneHours"></div>
+          </div>
+        </fieldset>
+
+        <!-- G. ELECTRICITY -->
+        <fieldset class="card card-wide">
+          <legend><span class="ico">⚡</span> G. Electricity Source</legend>
+          <div class="field">
+            <label for="gridRegion">Electricity grid used for the emission factor</label>
+            <select id="gridRegion"></select>
+          </div>
+          <p class="note">Energy × electricity emission factor = estimated CO₂e. A cleaner grid lowers every result.</p>
+        </fieldset>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-lg" id="btnCalc">Calculate Footprint</button>
+        <button type="button" class="btn btn-soft btn-lg" id="btnDemo">Try Demo Data</button>
+        <button type="button" class="btn btn-ghost btn-lg" id="btnReset">Reset</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ 3. RESULTS DASHBOARD ============ -->
+<section id="results" class="section section-tint result-section" hidden>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Step 2</span>
+      <h2>Results Dashboard</h2>
+      <p>Your <strong>estimated footprint</strong> based on the assumptions listed in the methodology.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi kpi-main">
+        <span class="kpi-label">Total estimated footprint</span>
+        <div class="kpi-value"><span id="totMonth">0</span><small> kg CO₂e / month</small></div>
+        <div class="kpi-sub"><strong id="totYear">0</strong> kg CO₂e / year</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Daily estimate</span>
+        <div class="kpi-value sm"><span id="totDay">0</span><small> kg CO₂e</small></div>
+        <div class="kpi-sub">per day</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Energy used (est.)</span>
+        <div class="kpi-value sm"><span id="totKwh">0</span><small> kWh</small></div>
+        <div class="kpi-sub">per month</div>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Rough equivalent</span>
+        <div class="kpi-value sm"><span id="totKm">0</span><small> km</small></div>
+        <div class="kpi-sub">in an average petrol car, per year</div>
+      </div>
+    </div>
+
+    <p class="disclaimer">DigitalCarbon provides educational estimates based on simplified assumptions and publicly available emission factors. Actual emissions vary depending on electricity sources, device efficiency, network infrastructure, data-centre efficiency, service providers and geographic location.</p>
+
+    <div class="chart-grid">
+      <div class="card">
+        <h3>Category breakdown</h3>
+        <p class="muted">Share of your estimated footprint</p>
+        <div class="chart-box"><canvas id="chartDoughnut"></canvas></div>
+        <ul class="legend-list" id="breakdownList"></ul>
+      </div>
+      <div class="card">
+        <h3>Footprint by category</h3>
+        <p class="muted">kg CO₂e per month</p>
+        <div class="chart-box tall"><canvas id="chartBar"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. HOTSPOT + ECO SCORE ============ -->
+<section id="hotspot" class="section result-section" hidden>
+  <div class="container two-col">
+    <div class="card hotspot">
+      <span class="eyebrow">🔎 Carbon hotspot</span>
+      <h2>Your Biggest Digital Carbon Hotspot</h2>
+      <div class="hotspot-name"><span id="hotspotIcon">🎬</span> <span id="hotspotName">Video Streaming</span></div>
+      <p id="hotspotText" class="hotspot-text"></p>
+      <div class="hotspot-bar"><div id="hotspotFill"></div></div>
+    </div>
+
+    <div class="card score-card">
+      <span class="eyebrow">🌱 Digital Eco Score</span>
+      <div class="score-wrap">
+        <div class="ring" id="scoreRing"><div class="ring-inner"><strong id="scoreNum">0</strong><span>/ 100</span></div></div>
+        <div class="score-info">
+          <div class="badge" id="scoreBadge">—</div>
+          <ul class="score-key">
+            <li>🟢 Low estimated impact</li>
+            <li>🟡 Moderate estimated impact</li>
+            <li>🔴 High estimated impact</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">The Digital Eco Score is an educational indicator created by this project and should not be interpreted as an official environmental rating.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. WHAT-IF SIMULATOR ============ -->
+<section id="whatif" class="section section-tint result-section" hidden>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Step 3</span>
+      <h2>🌱 What If I Changed My Digital Habits?</h2>
+      <p>Move the sliders to try a different routine. Results update instantly.</p>
+    </div>
+
+    <div class="whatif-grid">
+      <div class="card">
+        <div class="card-top">
+          <h3>Your scenario</h3>
+          <button type="button" class="btn btn-soft btn-sm" id="btnScenarioReset">Reset to current</button>
+        </div>
+        <div id="wiControls" class="wi-controls"></div>
+      </div>
+
+      <div class="wi-side">
+        <div class="card flow">
+          <div class="flow-card cur"><span>CURRENT</span><strong id="wiCur">0</strong><small>kg CO₂e / month</small></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-card new"><span>NEW</span><strong id="wiNew">0</strong><small>kg CO₂e / month</small></div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-card red" id="wiRedCard"><span id="wiRedLabel">REDUCTION</span><strong id="wiRed">0</strong><small>kg CO₂e / month</small>
+            <div class="red-pct" id="wiPct">0% reduction</div>
+            <div class="red-year" id="wiYear"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem">
+      <h3>Current vs Optimized</h3>
+      <p class="muted">kg CO₂e per month, by category</p>
+      <div class="chart-box tall"><canvas id="chartCompare"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. RECOMMENDATIONS ============ -->
+<section id="recommendations" class="section result-section" hidden>
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Step 4</span>
+      <h2>Personalized Recommendations</h2>
+      <p>Selected from your highest-emission categories.</p>
+    </div>
+    <div class="rec-grid" id="recGrid"></div>
+  </div>
+</section>
+
+<!-- ============ 7. METHODOLOGY ============ -->
+<section id="methodology" class="section section-tint">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">About</span>
+      <h2>About / Methodology</h2>
+    </div>
+
+    <div class="meth-grid">
+      <div class="card">
+        <h3>What is a digital carbon footprint?</h3>
+        <p>Every digital action – watching a video, playing a game, asking an AI a question, saving a photo to the cloud – uses electricity in your device, the network and remote data centres. When that electricity is generated from fossil fuels, greenhouse gases are released. The total, expressed as carbon-dioxide equivalent (CO₂e), is the <em>digital carbon footprint</em>.</p>
+      </div>
+
+      <div class="card">
+        <h3>How does DigitalCarbon work?</h3>
+        <ol class="pipeline">
+          <li>User Input</li>
+          <li>Activity Estimation</li>
+          <li>Energy Estimation (kWh)</li>
+          <li>Emission Factor (kg CO₂e per kWh)</li>
+          <li>CO₂e Calculation</li>
+          <li>Visualization</li>
+          <li>Recommendations</li>
+        </ol>
+        <p class="formula">Estimated CO₂e (kg) = Estimated energy (kWh) × Electricity emission factor (kg CO₂e/kWh)</p>
+      </div>
+
+      <div class="card">
+        <h3>Why are the results estimates?</h3>
+        <ul class="plain">
+          <li>Energy use per hour of streaming, gaming or per AI prompt varies widely between studies, services and devices.</li>
+          <li>Electricity carbon intensity changes by country, time of day and season.</li>
+          <li>Data-centre efficiency, network type (Wi-Fi vs mobile data) and device age all change the result.</li>
+          <li>The factors used here are simplified, rounded assumptions chosen for transparency, not measurements of your actual usage.</li>
+          <li>Device energy for streaming/gaming is already part of those activity factors, so the "Device Usage" category represents general everyday use and some overlap is possible.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:1.5rem">
+      <h3>Assumptions &amp; emission factors used</h3>
+      <p class="muted">Emission factors are informed by published research and documented assumptions, with all values centrally configured for transparency, consistency, and easy updates.</p>
+      <div class="table-wrap"><table class="table" id="assumptionTable"></table></div>
+    </div>
+
+    <p class="closing">The estimates produced by DigitalCarbon are intended for educational awareness and comparison rather than formal carbon accounting.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <strong>🌱 DigitalCarbon</strong> · EVS college project · Runs entirely in your browser – no data is stored or sent anywhere.
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+</body>
+</html>
